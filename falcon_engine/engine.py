@@ -3,8 +3,7 @@ Core Algorithmic Engine & Cryptographic / Biological Logic for FN-DSA / Falcon F
 Domain: Post-Quantum Cryptography & Zero-Knowledge
 Standard: NIST FN-DSA (Falcon Standard)
 """
-import math
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, Optional
 from .models import FrontierPayload, AgentTelemetryAlert, ExecutionStatus
 
 

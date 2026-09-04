@@ -4,9 +4,10 @@ Domain: Post-Quantum Cryptography & Hardware Security
 Standard: NIST FIPS 203/204/205 / ISO/IEC 17825 Standards
 """
 import datetime
+import math
 from enum import Enum
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class UrgencyLevel(str, Enum):
@@ -30,6 +31,21 @@ class SystemTaskPayload(BaseModel):
     is_critical_flag: bool = Field(default=False, description="Emergency escalation or high priority trigger")
     attributes: Dict[str, Any] = Field(default_factory=dict, description="Metadata key-value pairs")
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
+
+    @field_validator("primary_metric", "secondary_metric")
+    @classmethod
+    def reject_nan_inf(cls, v: float) -> float:
+        if math.isnan(v) or math.isinf(v):
+            raise ValueError("Metric values must be finite numbers (NaN/Inf not allowed)")
+        return v
+
+    @field_validator("task_id", "target_identifier", "status_descriptor")
+    @classmethod
+    def strip_and_validate_strings(cls, v: str) -> str:
+        stripped = v.strip()
+        if not stripped:
+            raise ValueError("String fields must not be empty or whitespace-only")
+        return stripped
 
 
 class AgentAlert(BaseModel):

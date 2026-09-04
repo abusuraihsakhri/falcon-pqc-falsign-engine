@@ -3,7 +3,7 @@ Distributed Component Coordination & Executive Hierarchy for FN-DSA / Falcon Fas
 Domain: Post-Quantum Cryptography & Zero-Knowledge
 """
 import uuid
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from .models import FrontierPayload, AgentTelemetryAlert, ExecutionStatus
 from .engine import FrontierDomainEngine
 
