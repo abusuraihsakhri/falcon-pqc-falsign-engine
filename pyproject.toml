@@ -16,8 +16,8 @@ classifiers = [
     "Topic :: Security/Cryptography",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = ["fastapi>=0.110,<1", "pydantic>=2,<3", "uvicorn>=0.30,<1"]\n\n[project.optional-dependencies]\ndev = ["pytest>=8,<10", "httpx>=0.27,<1"]
 
 [project.scripts]
 falcon-pqc-falsign-engine = "falcon_engine.cli:main"
