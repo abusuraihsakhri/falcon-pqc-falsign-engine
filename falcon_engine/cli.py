@@ -53,7 +53,7 @@ def main(argv=None):
         dossier = coordinator.process(payload)
         print("=" * 80)
         print(f"  FN-DSA / FALCON FAST-FOURIER LATTICE-BASED SIGNATURE ENGINE")
-        print(f"  Domain: Post-Quantum Cryptography & Zero-Knowledge | Standard: NIST FN-DSA (Falcon Standard)")
+        print(f"  Domain: Post-Quantum Cryptography & Zero-Knowledge | Rules: illustrative threshold rules")
         print(f"  Task: {dossier['task_id']} | Status: [{dossier['overall_status']}] | Total Alerts: {dossier['total_alerts']}")
         print("=" * 80)
         for a in dossier["alerts"]:
