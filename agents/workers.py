@@ -1,7 +1,7 @@
 """
 Specialized Domain Worker Agents for Falcon Pqc Falsign Engine.
 Domain: Post-Quantum Cryptography & Hardware Security
-Standard: NIST FIPS 203/204/205 / ISO/IEC 17825 Standards
+Standard: illustrative rules (not cryptographic conformance)
 """
 import uuid
 from typing import Dict, Any, List, Optional
