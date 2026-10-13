@@ -1,7 +1,7 @@
 """
 Data Models & Telemetry Definitions for FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine.
 Domain: Post-Quantum Cryptography & Zero-Knowledge
-Standard: NIST FN-DSA (Falcon Standard)
+Rules: illustrative threshold rules
 """
 import datetime
 from dataclasses import dataclass, field
@@ -35,7 +35,7 @@ class AgentTelemetryAlert:
     summary: str
     technical_details: str
     actionable_remediation: str
-    standard_reference: str = "NIST FN-DSA (Falcon Standard)"
+    standard_reference: str = "illustrative rules (not FN-DSA)"
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:
