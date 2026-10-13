@@ -2,6 +2,7 @@
 import os
 import hmac
 from pathlib import Path
+import web
 
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import FileResponse
@@ -11,7 +12,7 @@ from .base import AuditLogger, SecurityException
 from .models import SystemTaskPayload
 from .supervisor import SystemSupervisor
 
-supervisor = SystemSupervisor(model_provider="mock")
+supervisor = SystemSupervisor(model_provider=os.getenv("MODEL_PROVIDER", "mock"))
 
 app = FastAPI(
     title="Falcon PQC FALSIGN Rule Evaluation API",
@@ -26,7 +27,7 @@ class ChatRequest(BaseModel):
 
 @app.get("/")
 def console():
-    return FileResponse(Path(__file__).resolve().parent.parent / "web" / "index.html")
+    return FileResponse(Path(web.__file__).resolve().parent / "index.html")
 
 
 @app.get("/health")
