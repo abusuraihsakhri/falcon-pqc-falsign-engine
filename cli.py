@@ -8,7 +8,7 @@ import os
 import sys
 from agents.models import SystemTaskPayload
 from agents.supervisor import SystemSupervisor
-from agents.base import AuditLogger
+from agents.base import AuditLogger, SecurityException
 
 supervisor = SystemSupervisor(model_provider="mock")
 
@@ -57,7 +57,7 @@ def main(argv=None):
         dossier = supervisor.process_task(payload)
         print("=" * 80)
         print(f"  FALCON PQC FALSIGN ENGINE")
-        print(f"  Domain: Post-Quantum Cryptography & Hardware Security | Standard: NIST FIPS 203/204/205 / ISO/IEC 17825 Standards")
+        print(f"  Domain: Post-Quantum Cryptography & Hardware Security | Rules: illustrative thresholds (not cryptographic conformance)")
         print(f"  Dossier ID: {dossier.dossier_id} | Urgency: [{dossier.overall_urgency.value}]")
         print("=" * 80)
         for a in dossier.alerts:
@@ -115,7 +115,7 @@ def main(argv=None):
                             is_critical_flag=parse_boolean(r.get("is_critical_flag", "")),
                         )
                         dossier = supervisor.process_task(payload)
-                    except (ValueError, TypeError) as exc:
+                    except (ValueError, TypeError, SecurityException) as exc:
                         print(f"Error: Invalid data at CSV row {row_number} ({type(exc).__name__})", file=sys.stderr)
                         return 1
                     row = dict(r)
