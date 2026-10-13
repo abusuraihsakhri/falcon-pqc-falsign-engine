@@ -1,7 +1,7 @@
 """
 Pydantic v2 schemas and data definitions for Falcon Pqc Falsign Engine.
 Domain: Post-Quantum Cryptography & Hardware Security
-Standard: NIST FIPS 203/204/205 / ISO/IEC 17825 Standards
+Standard: illustrative rules (not cryptographic conformance)
 """
 import datetime
 import math
@@ -55,7 +55,7 @@ class AgentAlert(BaseModel):
     summary: str
     technical_details: str
     actionable_remediation: str
-    standard_reference: str = "NIST FIPS 203/204/205 / ISO/IEC 17825 Standards"
+    standard_reference: str = "illustrative rules (not cryptographic conformance)"
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +73,7 @@ class ConsensusDossier(BaseModel):
     total_alerts: int
     critical_alerts_count: int
     alerts: List[AgentAlert]
-    standard_reference: str = "NIST FIPS 203/204/205 / ISO/IEC 17825 Standards"
+    standard_reference: str = "illustrative rules (not cryptographic conformance)"
     consensus_summary: str
     audit_hash: str
     timestamp: str = Field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
