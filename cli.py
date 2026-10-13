@@ -81,37 +81,58 @@ def main(argv=None):
         return 0
 
     if args.command == "batch":
+        def parse_boolean(value: str) -> bool:
+            normalized = str(value or "").strip().lower()
+            if normalized in ("true", "1", "yes", "y", "on"):
+                return True
+            if normalized in ("false", "0", "no", "n", "off", ""):
+                return False
+            raise ValueError("Invalid boolean field")
+
         if not os.path.isfile(args.input):
             print(f"Error: Input file not found: {args.input}", file=sys.stderr)
             return 1
-        with open(args.input, mode="r", encoding="utf-8-sig") as f:
-            reader = csv.DictReader(f)
-            fieldnames = list(reader.fieldnames or [])
-            rows = list(reader)
-
-        out_fields = fieldnames + ["overall_urgency", "integrity_status", "total_alerts", "audit_hash"]
-        out_rows = []
-        for r in rows:
-            payload = SystemTaskPayload(
-                task_id=r.get("task_id", "TASK-01"),
-                target_identifier=r.get("target_identifier", "TARGET-01"),
-                primary_metric=float(r.get("primary_metric", 15.0)),
-                secondary_metric=float(r.get("secondary_metric", 5.0)),
-                status_descriptor=r.get("status_descriptor", "NOMINAL"),
-                is_critical_flag=bool(r.get("is_critical_flag", False)),
-            )
-            dossier = supervisor.process_task(payload)
-            row_dict = dict(r)
-            row_dict["overall_urgency"] = dossier.overall_urgency.value
-            row_dict["integrity_status"] = dossier.integrity_status.value
-            row_dict["total_alerts"] = dossier.total_alerts
-            row_dict["audit_hash"] = dossier.audit_hash
-            out_rows.append(row_dict)
-
-        with open(args.output, mode="w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=out_fields)
-            writer.writeheader()
-            writer.writerows(out_rows)
+        try:
+            with open(args.input, mode="r", encoding="utf-8-sig", newline="") as f:
+                reader = csv.DictReader(f)
+                fieldnames = list(reader.fieldnames or [])
+                required = {"task_id", "target_identifier", "primary_metric"}
+                if not required.issubset(fieldnames):
+                    print("Error: CSV must contain task_id, target_identifier, primary_metric", file=sys.stderr)
+                    return 1
+                out_fields = list(dict.fromkeys(
+                    fieldnames + ["overall_urgency", "integrity_status", "total_alerts", "audit_hash"]
+                ))
+                out_rows = []
+                for row_number, r in enumerate(reader, start=2):
+                    try:
+                        payload = SystemTaskPayload(
+                            task_id=r["task_id"],
+                            target_identifier=r["target_identifier"],
+                            primary_metric=float(r["primary_metric"]),
+                            secondary_metric=float(r.get("secondary_metric") or 0.0),
+                            status_descriptor=r.get("status_descriptor") or "NOMINAL",
+                            is_critical_flag=parse_boolean(r.get("is_critical_flag", "")),
+                        )
+                        dossier = supervisor.process_task(payload)
+                    except (ValueError, TypeError) as exc:
+                        print(f"Error: Invalid data at CSV row {row_number} ({type(exc).__name__})", file=sys.stderr)
+                        return 1
+                    row = dict(r)
+                    row.update(
+                        overall_urgency=dossier.overall_urgency.value,
+                        integrity_status=dossier.integrity_status.value,
+                        total_alerts=dossier.total_alerts,
+                        audit_hash=dossier.audit_hash,
+                    )
+                    out_rows.append(row)
+            with open(args.output, mode="w", encoding="utf-8", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=out_fields)
+                writer.writeheader()
+                writer.writerows(out_rows)
+        except OSError as exc:
+            print(f"Error: Unable to read or write CSV ({type(exc).__name__})", file=sys.stderr)
+            return 1
         print(f"Processed {len(out_rows)} records -> {args.output}")
         return 0
 
