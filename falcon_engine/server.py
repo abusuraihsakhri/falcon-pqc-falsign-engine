@@ -15,7 +15,7 @@ def create_app():
 
         app = FastAPI(
             title="FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine",
-            description="NIST draft FIPS Falcon signature engine utilizing NTRU lattice geometry, Fast Fourier Orthogonalization, and Gaussian trapdoor sampling.",
+            description="Demonstrative threshold/keyword evaluator; no lattice signature operations are implemented.",
             version="2.0.0-FRONTIER",
         )
 
