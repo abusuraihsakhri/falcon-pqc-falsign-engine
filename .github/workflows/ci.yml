@@ -21,5 +21,16 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Compile modules
         run: python -m compileall -q agents falcon_engine cli.py enrichment.py simulator.py
+      - name: Check browser JavaScript syntax
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path("web/index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.DOTALL)
+          assert len(scripts) == 1
+          Path("/tmp/falcon-console.js").write_text(scripts[0], encoding="utf-8")
+          PY
+          node --check /tmp/falcon-console.js
       - name: Run regression tests
         run: python -m pytest -q
