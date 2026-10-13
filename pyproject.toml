@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "falcon-pqc-falsign-engine"
-version = "2.0.0"
-description = "FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine"
+version = "3.0.0"
+description = "Demonstrative rule-evaluation and HMAC audit service; not an FN-DSA implementation"
 readme = "README.md"
 authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
 license = { text = "MIT" }
@@ -13,15 +13,25 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Topic :: Security/Cryptography",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Testing",
+    "Topic :: System :: Monitoring",
 ]
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = ["fastapi>=0.110,<1", "pydantic>=2,<3", "uvicorn>=0.30,<1"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "httpx>=0.27,<1"]
 
 [project.scripts]
-falcon-pqc-falsign-engine = "falcon_engine.cli:main"
+falcon-pqc-falsign-engine = "cli:main"
 
 [project.urls]
 Homepage = "https://github.com/abusuraihsakhri/falcon-pqc-falsign-engine"
 Repository = "https://github.com/abusuraihsakhri/falcon-pqc-falsign-engine.git"
+
+[tool.setuptools]
+packages = ["agents", "falcon_engine", "web"]
+py-modules = ["cli", "simulator", "enrichment", "falcon_engine_app"]
+
+[tool.setuptools.package-data]
+web = ["index.html"]

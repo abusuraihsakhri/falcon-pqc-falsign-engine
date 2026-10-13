@@ -7,6 +7,6 @@
   "is_critical_flag": true,
   "attributes": {
     "confidence_ratio": 0.88,
-    "protocol_standard": "NIST FN-DSA (Falcon Standard)"
+    "protocol_standard": "illustrative rule set (not FN-DSA)"
   }
 }

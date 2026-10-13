@@ -1,14 +1,14 @@
 """
 Core Algorithmic Engine & Cryptographic / Biological Logic for FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine.
 Domain: Post-Quantum Cryptography & Zero-Knowledge
-Standard: NIST FN-DSA (Falcon Standard)
+Rules: illustrative threshold rules
 """
 from typing import Dict, Any, Optional
 from .models import FrontierPayload, AgentTelemetryAlert, ExecutionStatus
 
 
 class FrontierDomainEngine:
-    STANDARD = "NIST FN-DSA (Falcon Standard)"
+    STANDARD = "illustrative rules (not FN-DSA)"
     PRIMARY_BOUND = 25.0
     SECONDARY_BOUND = 10.0
 
@@ -17,7 +17,7 @@ class FrontierDomainEngine:
         if value > cls.PRIMARY_BOUND:
             return {
                 "summary": "Primary Domain Boundary Deviation",
-                "details": f"Parameter value ({value:.3f}) exceeds operational threshold ({cls.PRIMARY_BOUND:.1f}) under NIST FN-DSA (Falcon Standard).",
+                "details": f"Parameter value ({value:.3f}) exceeds operational threshold ({cls.PRIMARY_BOUND:.1f}) under illustrative rules (not FN-DSA).",
                 "remediation": "Engage parameter recalibration and algorithmic verification routine.",
             }
         return None
@@ -38,7 +38,7 @@ class FrontierDomainEngine:
         if any(flag in desc_upper for flag in ["VIOLATION", "DISCORDANT", "ANOMALY", "MUTANT", "LEAK"]):
             return {
                 "summary": "Specification / Protocol Anomaly Identified",
-                "details": f"Telemetry status flag '{descriptor}' violates NIST FN-DSA (Falcon Standard) conformance matrix.",
+                "details": f"Telemetry status flag '{descriptor}' violates illustrative rules (not FN-DSA) conformance matrix.",
                 "remediation": "Execute automated rollback or secondary consensus verification.",
             }
         return None

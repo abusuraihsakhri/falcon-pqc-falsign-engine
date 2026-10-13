@@ -1,9 +1,10 @@
 """
 Data Models & Telemetry Definitions for FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine.
 Domain: Post-Quantum Cryptography & Zero-Knowledge
-Standard: NIST FN-DSA (Falcon Standard)
+Rules: illustrative threshold rules
 """
 import datetime
+import math
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Any
@@ -26,6 +27,18 @@ class FrontierPayload:
     attributes: Dict[str, Any] = field(default_factory=dict)
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
+    def __post_init__(self) -> None:
+        for field_name in ("task_id", "target_identifier", "status_descriptor"):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{field_name} must be a nonempty string")
+            setattr(self, field_name, value.strip())
+        for field_name in ("primary_metric", "secondary_metric"):
+            value = getattr(self, field_name)
+            if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value):
+                raise ValueError(f"{field_name} must be a finite number")
+
+
 
 @dataclass
 class AgentTelemetryAlert:
@@ -35,7 +48,7 @@ class AgentTelemetryAlert:
     summary: str
     technical_details: str
     actionable_remediation: str
-    standard_reference: str = "NIST FN-DSA (Falcon Standard)"
+    standard_reference: str = "illustrative rules (not FN-DSA)"
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
 
     def to_dict(self) -> Dict[str, Any]:

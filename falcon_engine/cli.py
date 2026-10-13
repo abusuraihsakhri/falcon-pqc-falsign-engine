@@ -53,7 +53,7 @@ def main(argv=None):
         dossier = coordinator.process(payload)
         print("=" * 80)
         print(f"  FN-DSA / FALCON FAST-FOURIER LATTICE-BASED SIGNATURE ENGINE")
-        print(f"  Domain: Post-Quantum Cryptography & Zero-Knowledge | Standard: NIST FN-DSA (Falcon Standard)")
+        print(f"  Domain: Post-Quantum Cryptography & Zero-Knowledge | Rules: illustrative threshold rules")
         print(f"  Task: {dossier['task_id']} | Status: [{dossier['overall_status']}] | Total Alerts: {dossier['total_alerts']}")
         print("=" * 80)
         for a in dossier["alerts"]:
@@ -87,7 +87,7 @@ def main(argv=None):
                 primary_metric=float(r.get("primary_metric", 15.0)),
                 secondary_metric=float(r.get("secondary_metric", 5.0)),
                 status_descriptor=r.get("status_descriptor", "NOMINAL"),
-                is_critical_flag=bool(r.get("is_critical_flag", False)),
+                is_critical_flag=str(r.get("is_critical_flag", "")).strip().lower() in ("true", "1", "yes", "y", "on"),
             )
             dossier = coordinator.process(payload)
             row_dict = dict(r)
