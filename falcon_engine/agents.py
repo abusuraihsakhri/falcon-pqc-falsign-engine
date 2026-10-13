@@ -93,7 +93,7 @@ class FalconCoordinator:
             "critical_count": crit_count,
             "warning_count": warn_count,
             "alerts": [a.to_dict() for a in all_alerts],
-            "standard_specification": "NIST FN-DSA (Falcon Standard)",
+            "standard_specification": "illustrative rules (not FN-DSA)",
             "consensus_summary": f"Consensus evaluation completed across 3 sub-agents with status [{status.value}].",
         }
 
@@ -105,6 +105,6 @@ class FalconCoordinator:
         if "status" in q or "ledger" in q:
             return f"FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine currently managing {len(self.execution_ledger)} execution tasks in air-gapped memory."
         elif "standard" in q or "spec" in q:
-            return "Active runtime operating strictly according to NIST FN-DSA (Falcon Standard) specifications."
+            return "Active runtime operating strictly according to illustrative rules (not FN-DSA) specifications."
         else:
             return f"FN-DSA / Falcon Fast-Fourier Lattice-Based Signature Engine executive coordinator online. Zero-telemetry on-premises surveillance active."
