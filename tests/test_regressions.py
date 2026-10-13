@@ -96,3 +96,31 @@ def test_api_console_metrics_and_audit_authorization(monkeypatch):
 def test_audit_logs_disabled_without_secret(monkeypatch):
     monkeypatch.delenv("AUDIT_READ_TOKEN", raising=False)
     assert TestClient(app).get("/api/audit/logs", headers={"X-Audit-Token": "anything"}).status_code == 403
+
+
+def test_alternate_evaluator_rejects_nonfinite_inputs():
+    from falcon_engine.models import FrontierPayload
+    with pytest.raises(ValueError, match="finite"):
+        FrontierPayload("TASK", "KEY", float("nan"), 0, "NOMINAL")
+    with pytest.raises(ValueError, match="nonempty"):
+        FrontierPayload("", "KEY", 10, 0, "NOMINAL")
+
+
+def test_alternate_batch_false_flag(tmp_path):
+    from falcon_engine.cli import main as alternate_main
+    path = tmp_path / "secondary.csv"
+    output = tmp_path / "secondary_results.csv"
+    path.write_text(
+        "task_id,target_identifier,primary_metric,secondary_metric,status_descriptor,is_critical_flag\n"
+        "T1,KEY-01,5,0,NOMINAL,False\n", encoding="utf-8"
+    )
+    assert alternate_main(["batch", "-i", str(path), "-o", str(output)]) == 0
+    with output.open(newline="", encoding="utf-8") as f:
+        data = list(csv.DictReader(f))
+    assert data[0]["overall_status"] == "NOMINAL_OPTIMAL"
+
+
+def test_static_api_reference_has_live_paths():
+    from pathlib import Path
+    reference = json.loads((Path(__file__).parent.parent / "openapi_spec.json").read_text(encoding="utf-8"))
+    assert set(reference["paths"]) <= set(app.openapi()["paths"])
