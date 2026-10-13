@@ -1,7 +1,7 @@
 """
 Falcon Pqc Falsign Engine — Enterprise Automated Analytical Suite.
 Domain: Post-Quantum Cryptography & Hardware Security
-Standard: NIST FIPS 203/204/205 / ISO/IEC 17825 Standards
+Standard: illustrative rules (not cryptographic conformance)
 
 """
 __version__ = "3.0.0-ENTERPRISE"
