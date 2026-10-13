@@ -4,6 +4,7 @@ Domain: Post-Quantum Cryptography & Zero-Knowledge
 Rules: illustrative threshold rules
 """
 import datetime
+import math
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Any
@@ -25,6 +26,18 @@ class FrontierPayload:
     is_critical_flag: bool = False
     attributes: Dict[str, Any] = field(default_factory=dict)
     timestamp: str = field(default_factory=lambda: datetime.datetime.now(datetime.timezone.utc).isoformat())
+
+    def __post_init__(self) -> None:
+        for field_name in ("task_id", "target_identifier", "status_descriptor"):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{field_name} must be a nonempty string")
+            setattr(self, field_name, value.strip())
+        for field_name in ("primary_metric", "secondary_metric"):
+            value = getattr(self, field_name)
+            if isinstance(value, bool) or not isinstance(value, (float, int)) or not math.isfinite(value):
+                raise ValueError(f"{field_name} must be a finite number")
+
 
 
 @dataclass
